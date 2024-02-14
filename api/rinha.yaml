@@ -1,0 +1,171 @@
+openapi: 3.0.3
+info:
+  title: Rinha golang API
+  description: Rinha golang API
+  version: 1.0.0
+servers:
+  - url: 'http'
+paths:
+  /clientes/:id/transacoes:
+    post:
+      summary: Transação
+      description: Transação para ser realizada na conta do cliente
+      parameters:
+        - name: :id
+          in: path
+          description: número inteiro representando a identificação do cliente
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - valor
+                - tipo
+                - descricao
+              properties:
+                valor:
+                  description: deve um número inteiro positivo que representa centavos (não vamos trabalhar com frações de centavos). Por exemplo, R$ 10 são 1000 centavos.
+                  type: integer
+                  format: int32
+                  minimum: 1
+                  example: 1000
+                tipo:
+                  description: deve ser apenas c para crédito ou d para débito.
+                  type: string
+                  enum:
+                    - c
+                    - d
+                  minLength: 1
+                  maxLength: 1
+                  example: c
+                descricao:
+                  description: deve ser uma string de 1 a 10 caractéres.
+                  type: string
+                  minLength: 1
+                  maxLength: 10
+                  example: descricao
+      responses:
+        404:
+          description: cliente não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: mensagem de erro
+                    example: Cliente não encontrado
+        422:
+          description: Saldo inconsistente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: mensagem de erro
+                    example: Saldo insuficiente para realizar a transação
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limite:
+                    description: deve ser o limite cadastrado do cliente.
+                    type: integer
+                    format: int32
+                    minimum: 1
+                    example: 100000
+                  saldo:
+                    description: deve ser o novo saldo após a conclusão da transação.
+                    type: integer
+                    format: int32
+                    example: -9098
+  /clientes/:id/extrato:
+    get:
+      summary: Extrato
+      description: Extrato da conta do cliente
+      parameters:
+        - name: :id
+          in: path
+          description: número inteiro representando a identificação do cliente
+          required: true
+          schema:
+            type: integer
+      responses:
+        404:
+          description: cliente não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: mensagem de erro
+                    example: Cliente não encontrado
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  saldo:
+                    description: deve ser o novo saldo após a conclusão da transação.
+                    type: object
+                    properties:
+                      total:
+                        description: deve ser o saldo total atual do cliente (não apenas das últimas transações seguintes exibidas).
+                        type: integer
+                        example: -9098
+                      data_extrato:
+                        description: deve ser a data/hora da consulta do extrato.
+                        type: string
+                        format: date-time
+                        example: 2024-01-17T02:34:41.217753Z
+                      limite:
+                        description: deve ser o limite cadastrado do cliente.
+                        type: integer
+                        example: 100000
+                  ultimas_trnsacoes:
+                    description: é uma lista ordenada por data/hora das transações de forma decrescente contendo até as 10 últimas transações com o seguinte
+                    type: array
+                    maxItems: 10
+                    items:
+                      type: object
+                      properties:
+                        valor:
+                          description: deve um número inteiro positivo que representa centavos (não vamos trabalhar com frações de centavos). Por exemplo, R$ 10 são 1000 centavos.
+                          type: integer
+                          format: int32
+                          minimum: 1
+                          example: 1000
+                        tipo:
+                          description: deve ser apenas c para crédito ou d para débito.
+                          type: string
+                          enum:
+                            - c
+                            - d
+                          minLength: 1
+                          maxLength: 1
+                          example: c
+                        descricao:
+                          description: deve ser uma string de 1 a 10 caractéres.
+                          type: string
+                          minLength: 1
+                          maxLength: 10
+                          example: descricao
+                        realizada_em:
+                          description: deve ser a data/hora da realização da transação.
+                          type: string
+                          format: date_time
+                          example: 2024-01-17T02:34:38.543030Z
