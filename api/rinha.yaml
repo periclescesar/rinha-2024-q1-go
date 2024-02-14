@@ -70,7 +70,7 @@ paths:
                   message:
                     type: string
                     description: mensagem de erro
-                    example: Saldo insuficiente para realizar a transação
+                    example: saldo insuficiente para realizar a transação
         200:
           description: ok
           content:
@@ -136,7 +136,7 @@ paths:
                         description: deve ser o limite cadastrado do cliente.
                         type: integer
                         example: 100000
-                  ultimas_trnsacoes:
+                  ultimas_transacoes:
                     description: é uma lista ordenada por data/hora das transações de forma decrescente contendo até as 10 últimas transações com o seguinte
                     type: array
                     maxItems: 10
