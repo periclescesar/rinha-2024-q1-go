@@ -4,7 +4,7 @@ info:
   description: Rinha golang API
   version: 1.0.0
 servers:
-  - url: 'http'
+  - url: 'http://localhost:8080'
 paths:
   /clientes/:id/transacoes:
     post:
