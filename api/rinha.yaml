@@ -56,7 +56,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  message:
+                  mensagem:
                     type: string
                     description: mensagem de erro
                     example: Cliente não encontrado
@@ -67,7 +67,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  message:
+                  mensagem:
                     type: string
                     description: mensagem de erro
                     example: saldo insuficiente para realizar a transação
@@ -108,7 +108,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  message:
+                  mensage:
                     type: string
                     description: mensagem de erro
                     example: Cliente não encontrado
