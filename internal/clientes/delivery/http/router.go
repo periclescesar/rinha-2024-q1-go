@@ -10,7 +10,7 @@ func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
 	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello World!")
+		c.String(http.StatusOK, "online")
 	})
 
 	clientes := r.Group("/clientes/:id")
