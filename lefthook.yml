@@ -24,3 +24,8 @@ pre-commit:
     golangci-lint:
       glob: "*.go"
       run: golangci-lint run
+    test-behaviour:
+      glob: "*.go"
+      run: go test -v --godog.tags=~@wip
+
+
