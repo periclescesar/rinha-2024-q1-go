@@ -18,20 +18,20 @@ func SetupRouter() *gin.Engine {
 		clientes.POST("/transacoes", func(c *gin.Context) {
 			id, err := strconv.Atoi(c.Param("id"))
 			if err != nil {
-				c.JSON(404, gin.H{
-					"message": "cliente não encontrado",
+				c.JSON(http.StatusNotFound, gin.H{
+					"mensagem": "cliente não encontrado",
 				})
 				return
 			}
 
 			if id == 6 {
-				c.JSON(404, gin.H{
-					"message": "cliente não encontrado",
+				c.JSON(http.StatusNotFound, gin.H{
+					"mensagem": "cliente não encontrado",
 				})
 				return
 			}
 
-			c.JSON(200, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"limite": 100000,
 				"saldo":  -9098,
 			})
@@ -40,30 +40,32 @@ func SetupRouter() *gin.Engine {
 		clientes.GET("/extrato", func(c *gin.Context) {
 			id, err := strconv.Atoi(c.Param("id"))
 			if err != nil {
-				c.JSON(404, gin.H{
-					"message": "cliente não encontrado",
+				c.JSON(http.StatusNotFound, gin.H{
+					"mensagem": "cliente não encontrado",
 				})
 				return
 			}
 
 			if id == 6 {
-				c.JSON(404, gin.H{
-					"message": "cliente não encontrado",
+				c.JSON(http.StatusNotFound, gin.H{
+					"mensagem": "cliente não encontrado",
 				})
 				return
 			}
 
-			c.JSON(200, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"saldo": gin.H{
 					"total":        -9098,
 					"data_extrato": "2024-01-17T02:34:41.217753Z",
 					"limite":       100000,
 				},
-				"ultimas_transacoes": gin.H{
-					"valor":        1000,
-					"tipo":         "c",
-					"descricao":    "descricao",
-					"realizada_em": "2024-01-17T02:34:38.543030Z",
+				"ultimas_transacoes": []gin.H{
+					{
+						"valor":        1000,
+						"tipo":         "c",
+						"descricao":    "descricao",
+						"realizada_em": "2024-01-17T02:34:38.543030Z",
+					},
 				},
 			})
 		})
