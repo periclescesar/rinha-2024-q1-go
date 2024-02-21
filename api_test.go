@@ -121,6 +121,10 @@ func (a *apiFeature) makeRequest(method string, path string, body io.Reader) err
 	return err
 }
 
+func InitializeTestSuite(ctx *godog.TestSuiteContext) {
+	ctx.BeforeSuite(func() { fmt.Println("Starting suite!") })
+}
+
 func InitializeScenario(ctx *godog.ScenarioContext) {
 	api := &apiFeature{}
 	ctx.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
