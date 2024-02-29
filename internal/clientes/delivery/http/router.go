@@ -3,7 +3,6 @@ package httpHandler
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"strconv"
 )
 
 func SetupRouter() *gin.Engine {
@@ -15,60 +14,9 @@ func SetupRouter() *gin.Engine {
 
 	clientes := r.Group("/clientes/:id")
 	{
-		clientes.POST("/transacoes", func(c *gin.Context) {
-			id, err := strconv.Atoi(c.Param("id"))
-			if err != nil {
-				c.JSON(http.StatusNotFound, gin.H{
-					"mensagem": "cliente não encontrado",
-				})
-				return
-			}
+		clientes.POST("/transacoes", makeTransaction)
 
-			if id == 6 {
-				c.JSON(http.StatusNotFound, gin.H{
-					"mensagem": "cliente não encontrado",
-				})
-				return
-			}
-
-			c.JSON(http.StatusOK, gin.H{
-				"limite": 100000,
-				"saldo":  -9098,
-			})
-		})
-
-		clientes.GET("/extrato", func(c *gin.Context) {
-			id, err := strconv.Atoi(c.Param("id"))
-			if err != nil {
-				c.JSON(http.StatusNotFound, gin.H{
-					"mensagem": "cliente não encontrado",
-				})
-				return
-			}
-
-			if id == 6 {
-				c.JSON(http.StatusNotFound, gin.H{
-					"mensagem": "cliente não encontrado",
-				})
-				return
-			}
-
-			c.JSON(http.StatusOK, gin.H{
-				"saldo": gin.H{
-					"total":        -9098,
-					"data_extrato": "2024-01-17T02:34:41.217753Z",
-					"limite":       100000,
-				},
-				"ultimas_transacoes": []gin.H{
-					{
-						"valor":        1000,
-						"tipo":         "c",
-						"descricao":    "descricao",
-						"realizada_em": "2024-01-17T02:34:38.543030Z",
-					},
-				},
-			})
-		})
+		clientes.GET("/extrato", getAccountStatement)
 	}
 	return r
 }
