@@ -20,7 +20,7 @@ pre-commit:
   commands:
     govet:
       glob: "*.go"
-      run: go vet {staged_files}
+      run: go vet ./...
     golangci-lint:
       glob: "*.go"
       run: golangci-lint run
