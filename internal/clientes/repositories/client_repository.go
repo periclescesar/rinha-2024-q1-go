@@ -15,7 +15,7 @@ func (r PostgresClientRepository) GetAccountStatement(id int) (*clientes.Account
 
 	dt := time.Now()
 
-	var accStattment = &clientes.AccountStatement{
+	var accStatement = &clientes.AccountStatement{
 		Balance: clientes.Balance{
 			StatementDate: dt.Format(time.RFC3339Nano),
 		},
@@ -36,11 +36,11 @@ func (r PostgresClientRepository) GetAccountStatement(id int) (*clientes.Account
 	}
 	row := stmt.QueryRow(id)
 
-	err = row.Scan(&accStattment.Balance.Limit, &accStattment.Balance.Total, &accStattment.LastTransactions)
+	err = row.Scan(&accStatement.Balance.Limit, &accStatement.Balance.Total, &accStatement.LastTransactions)
 
 	if err != nil {
 		return nil, errors.New("cliente não encontrado")
 	}
 
-	return accStattment, nil
+	return accStatement, nil
 }

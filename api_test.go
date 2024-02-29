@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/cucumber/godog"
 	messages "github.com/cucumber/messages/go/v21"
+	"github.com/gin-gonic/gin"
 	httpHandler "github.com/periclescesar/rinha-2024-q1-go/internal/clientes/delivery/http"
 	"github.com/stretchr/testify/assert"
 	"io"
@@ -96,7 +97,7 @@ func (a *apiFeature) theLastsTransactions(nTransactions int) error {
 	return assertExpectedAndActual(assert.Equal, nTransactions, len(actual.UltimasTransacoes))
 }
 
-func (a *apiFeature) getAccountStattmentOfCustomer(id int) error {
+func (a *apiFeature) getAccountStatementOfCustomer(id int) error {
 	return a.makeRequest("GET", fmt.Sprintf("/clientes/%d/extrato", id), nil)
 }
 
@@ -106,6 +107,7 @@ func (a *apiFeature) makeRequest(method string, path string, body io.Reader) err
 		return err
 	}
 
+	gin.SetMode(gin.ReleaseMode)
 	r := httpHandler.SetupRouter()
 	r.ServeHTTP(a.resp, req)
 
@@ -132,7 +134,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		return ctx, nil
 	})
 
-	ctx.Step(`^I get a account stattement of the customer\'s id (\d+)$`, api.getAccountStattmentOfCustomer)
+	ctx.Step(`^I get a account statement of the customer\'s id (\d+)$`, api.getAccountStatementOfCustomer)
 	ctx.Step(`^I make a debit of (\d+) to the customer\'s account with id (\d+) and description "([^"]*)"$`, api.iMakeADebitOfToTheCustomersAccountWithIdAndDescription)
 	ctx.Step(`^I will receive a error "([^"]*)"$`, api.iWillReceiveAError)
 	ctx.Step(`^I will see my limit of (\d+) and balance of -(\d+)$`, api.iWillSeeMyLimitOfAndBalanceOf)
