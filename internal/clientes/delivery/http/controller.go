@@ -18,7 +18,7 @@ func getAccountStatement(c *gin.Context) {
 
 	repo := &repositories.PostgresClientRepository{}
 
-	accStattment, err := repo.GetAccountStattment(id)
+	accStattment, err := repo.GetAccountStatement(id)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{

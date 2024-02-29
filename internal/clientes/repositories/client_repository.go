@@ -10,7 +10,7 @@ import (
 type PostgresClientRepository struct {
 }
 
-func (r PostgresClientRepository) GetAccountStattment(id int) (*clientes.AccountStatement, error) {
+func (r PostgresClientRepository) GetAccountStatement(id int) (*clientes.AccountStatement, error) {
 	db := ports.GetConnection()
 
 	dt := time.Now()
