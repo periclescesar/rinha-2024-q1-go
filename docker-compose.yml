@@ -2,7 +2,7 @@ version: "3.5"
 
 services:
   api01: &api
-    image: zanfranceschi/rinha-2024q1-crebito
+    image: zanfranceschi/rinha-2024q1-crebkkkito
     hostname: api01
     environment:
       - DB_HOSTNAME=db
@@ -25,7 +25,7 @@ services:
     hostname: api02
     ports:
       - "3002:3000"
-  
+
   nginx:
     image: nginx:latest
     volumes:

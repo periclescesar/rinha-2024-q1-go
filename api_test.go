@@ -53,6 +53,18 @@ func (a *apiFeature) iWillReceiveAError(errMessage string) error {
 	return assertExpectedAndActual(assert.Equal, expected, actual)
 }
 
+func (a *apiFeature) iWillSeeMyLimitOfAndBalanceOf(limit, balance float64) error {
+	var expected = interface{}(map[string]interface{}{"saldo": balance, "limite": limit})
+	var actual interface{}
+	// re-encode actual response too
+	if err := json.Unmarshal(a.resp.Body.Bytes(), &actual); err != nil {
+		return err
+	}
+
+	//expected.Saldo.DataExtrato = actual.Saldo.DataExtrato
+	return assertExpectedAndActual(assert.Equal, expected, actual)
+}
+
 type Balance struct {
 	Total       int    `json:"total"`
 	DataExtrato string `json:"data_extrato"`
@@ -66,29 +78,30 @@ type Transaction struct {
 	RealizedAt string `json:"realizada_em"`
 }
 
-type AccountStattment struct {
-	Saldo             interface{}   `json:"saldo"`
+type AccountStatement struct {
+	Saldo             Balance       `json:"saldo"`
 	UltimasTransacoes []Transaction `json:"ultimas_transacoes"`
 }
 
-func (a *apiFeature) iWillSeeMyLimitOfAndBalanceOf(limit, balance int) error {
-	var expected = &AccountStattment{
-		Saldo: &Balance{
+func (a *apiFeature) iWillSeeMyStatementLimitOfAndBalanceOf(limit, balance int) error {
+	var expected = AccountStatement{
+		Saldo: Balance{
 			Limite: limit,
 			Total:  balance,
 		},
 	}
-	var actual AccountStattment
+	var actual AccountStatement
 	// re-encode actual response too
 	if err := json.Unmarshal(a.resp.Body.Bytes(), &actual); err != nil {
 		return err
 	}
 
+	expected.Saldo.DataExtrato = actual.Saldo.DataExtrato
 	return assertExpectedAndActual(assert.Equal, expected, actual)
 }
 
 func (a *apiFeature) theLastsTransactions(nTransactions int) error {
-	var actual AccountStattment
+	var actual AccountStatement
 	// re-encode actual response too
 	if err := json.Unmarshal(a.resp.Body.Bytes(), &actual); err != nil {
 		return err
@@ -137,6 +150,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^I get a account statement of the customer\'s id (\d+)$`, api.getAccountStatementOfCustomer)
 	ctx.Step(`^I make a debit of (\d+) to the customer\'s account with id (\d+) and description "([^"]*)"$`, api.iMakeADebitOfToTheCustomersAccountWithIdAndDescription)
 	ctx.Step(`^I will receive a error "([^"]*)"$`, api.iWillReceiveAError)
-	ctx.Step(`^I will see my limit of (\d+) and balance of -(\d+)$`, api.iWillSeeMyLimitOfAndBalanceOf)
+	ctx.Step(`^I will see my limit of (\d+) and balance of (-?\d+)$`, api.iWillSeeMyLimitOfAndBalanceOf)
+	ctx.Step(`^I will see my statement limit of (\d+) and balance of (-?\d+)$`, api.iWillSeeMyStatementLimitOfAndBalanceOf)
 	ctx.Step(`^the lasts (\d+) transactions$`, api.theLastsTransactions)
 }
